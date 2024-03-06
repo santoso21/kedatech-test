@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>    
+    	<!-- Materials View -->
+        <record id="material_material_search_view" model="ir.ui.view">
+            <field name="name">material.material.search</field>
+            <field name="model">material.material</field>
+            <field name="arch" type="xml">
+                <search string="Material">
+                    <field name="name" string="Material Name"/>
+                    <field name="default_code"/>
+                    <field name="partner_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="material_material_form_view" model="ir.ui.view">
+            <field name="name">material.material.form</field>
+            <field name="model">material.material</field>
+            <field name="arch" type="xml">
+                <form class="oe_form_configuration">
+                    <sheet>                        
+                        <div class="oe_title">
+                            <label for="name" string="Category name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="e.g. Lamps"/></h1>
+                        </div>
+                        <group name="first" col="2">
+                            <field name="default_code" class="oe_inline"/>
+                        </group>
+                        <notebook>
+                        	<page string="Information" name="material-info">
+                        		<group>
+                        			<group>  
+                        				<field name="partner_id"/>                      				
+                        				<field name="product_type"/>
+                        				<field name="price_unit"/>
+                        				<field name="product_uom"/>                        				
+                        			</group>
+                        			<group>
+                        				<field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', company_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}"/>                        				
+                        				<field name="company_id" options="{'no_create': True}"
+                    						groups="base.group_multi_company" optional="hide"/>
+                        			</group>
+                        		</group>                        		
+                        	</page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="material_material_list_view" model="ir.ui.view">
+            <field name="name">material.material.list</field>
+            <field name="model">material.material</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Materials">
+                    <field name="name"/>
+                    <field name="default_code"/>
+                    <field name="price_unit"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="material_material_action_form" model="ir.actions.act_window">
+            <field name="name">Materials</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">material.material</field>
+            <field name="search_view_id" ref="material_material_search_view"/>
+            <field name="view_id" ref="material_material_list_view"/>
+        </record>
+        
+        <!-- Top menu item -->
+        <menuitem name="Materials"
+            id="menu_material_root" groups="base.group_user"           
+            web_icon="purchase,static/description/icon.png"
+            sequence="25"/>
+
+        <menuitem id="menu_material_management" name="Materials"
+            parent="menu_material_root" action="material_material_action_form" sequence="1" />
+        
+    </data>
+</odoo>
